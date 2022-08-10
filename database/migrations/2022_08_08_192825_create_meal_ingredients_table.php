@@ -15,7 +15,11 @@ return new class extends Migration
     {
         Schema::create('meal_ingredients', function (Blueprint $table) {
             $table->integer('meal_id');
+            $table->integer('ingredient_id');
             $table->timestamps();
+
+            $table->foreign('meal_id')->references('id')->on('meals')->onDelete('cascade');
+            $table->foreign('ingredient_id')->references('id')->on('ingredients')->onDelete('cascade');
         });
     }
 
