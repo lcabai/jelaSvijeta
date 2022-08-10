@@ -13,16 +13,16 @@ class Meal extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['title', 'description', 'status'];
 
-    public function mealCatergory()
+    public function catergory()
     {
         return $this->hasOne(Category::class);
     }
-    public function mealTags()
+    public function tags()
     {
-        return $this->hasMany(Tag::class);
+        return $this->belongsToMany(Tag::class);
     }
-    public function mealIngredients()
+    public function ingredients()
     {
-        return $this->hasMany(Ingredient::class);
+        return $this->belongsToMany(Ingredient::class);
     }
 }

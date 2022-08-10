@@ -14,8 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tag_translations', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->integer('tag_id');
+            $table->integer('language_id');
+            $table->unique(['tag_id', 'language_id']);
+            $table->string('title');
             $table->timestamps();
+
+            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
+            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
         });
     }
 

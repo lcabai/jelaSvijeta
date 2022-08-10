@@ -14,8 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('meal_tags', function (Blueprint $table) {
-            $table->id();
+            $table->integer('meal_id');
+            $table->integer('tag_id');
             $table->timestamps();
+
+            $table->foreign('meal_id')->references('id')->on('meals')->onDelete('cascade');
+            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
         });
     }
 

@@ -15,11 +15,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('meals', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->string('description')->nullable();
-            $table->enum('status', ['created', 'modified', 'deleted']);
+            $table->increments('id');
             $table->unsignedInteger('category_id')->nullable();
+            $table->enum('status', ['created', 'modified', 'deleted']); //todo
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
