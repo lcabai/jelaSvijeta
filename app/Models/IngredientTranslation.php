@@ -10,6 +10,6 @@ class IngredientTranslation extends Model
     use HasFactory;
 
     protected $table = 'ingredient_translations';
-
     protected $fillable = ['title'];
+    public $timestamps = false;
 }

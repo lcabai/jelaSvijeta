@@ -10,6 +10,6 @@ class TagTranslation extends Model
     use HasFactory;
 
     protected $table = 'tag_translations';
-
     protected $fillable = ['title'];
+    public $timestamps = false;
 }

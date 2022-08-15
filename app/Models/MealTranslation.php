@@ -10,6 +10,6 @@ class MealTranslation extends Model
     use HasFactory;
 
     protected $table = 'meal_translations';
-
     protected $fillable = ['title', 'description'];
+    public $timestamps = false;
 }
