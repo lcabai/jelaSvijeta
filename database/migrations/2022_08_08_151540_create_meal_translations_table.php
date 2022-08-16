@@ -20,7 +20,6 @@ return new class extends Migration
             $table->unique(['meal_id', 'language_id']);
             $table->string('title');
             $table->text('description')->nullable();
-            $table->timestamps();
 
             $table->foreign('meal_id')->references('id')->on('meals')->onDelete('cascade');
             $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');

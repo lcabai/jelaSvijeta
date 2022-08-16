@@ -10,7 +10,7 @@ class MealFactory extends Factory
     {
         return [
             'status' => 'created',
-            'category_id' => fake()->numberBetween(1, 10),
+            'category_id' => fake()->optional(0.9, null)->numberBetween(1, 10), // 10% chance of null
         ];
     }
 }
