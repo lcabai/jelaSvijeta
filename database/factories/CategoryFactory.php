@@ -10,7 +10,6 @@ class CategoryFactory extends Factory
     {
         return [
             'slug' => fake()->unique()->name(),
-            'title' => fake()->name(),
         ];
     }
 }
