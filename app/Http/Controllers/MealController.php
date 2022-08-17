@@ -42,10 +42,7 @@ class MealController extends Controller
             'fr' => 3,
         };
 
-        $query = DB::table('meal_translations')
-            ->where('language_id', $language_id)
-            ->leftJoin('meals', 'meal_id', 'meals.id')
-            ->get();
+        $query = Meal::select();
 
         if (isset($params['category'])) {
             if ($params['category'] == 'NULL') {
@@ -60,26 +57,30 @@ class MealController extends Controller
             }
         }
 
-        if (isset($params['tag'])) {
-            $tags = explode(',', $params['tag']);
-            $tags_table = DB::table('tag_translations')
-                ->where('language_id', $language_id)
-                ->leftJoin('tags', 'tag_id', 'tags.id')
-                ->leftJoin('meal_tag', 'tag_id', 'meal_tag.tag_id')
-                ->get();
+        if (isset($params['tags'])) {
+            $tags = explode(',', $params['tags']);
 
-            $query = $query
-                ->leftJoin($tags_table, 'id', 'meal_id')
-                ->whereIn('tag_id', $tags);
+            foreach ($tags as $tag) {
+                $meal_ids = DB::table('meal_tag')->where('tag_id', $tag)->pluck('meal_id');
+                $query = $query
+                    ->whereIn('id', $meal_ids);
+            }
         }
 
         if (isset($params['diff_time'])) {
+            $date = date('Y-m-d H:i:s', $params['diff_time']);
+            $query = $query
+                ->where('created_at', '>', $date);
         }
 
 
         if (isset($params['with'])) {
         }
 
+        // $query = MealTranslation::select()
+        //     ->where('language_id', $language_id)
+        //     ->leftJoin('meals', 'meal_id', 'meals.id');
+        $query = $query->get();
         // ->select('meal_id as id', 'title', 'description', 'status')
 
         // $per_page = isset($params['per_page']) ? $params['per_page'] : 10;
