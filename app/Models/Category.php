@@ -17,9 +17,4 @@ class Category extends Model implements TranslatableContract
     public $translatedAttributes = ['title'];
 
     protected $fillable = ['slug'];
-
-    // public function meal()
-    // {
-    //     return $this->hasMany(Meal::class);
-    // } todo jel treba ova fja uopce vidjet ces
 }

@@ -16,13 +16,13 @@ return new class extends Migration
         Schema::create('meal_translations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('meal_id');
-            $table->integer('language_id');
-            $table->unique(['meal_id', 'language_id']);
+            $table->string('locale')->index();
+            $table->unique(['meal_id', 'locale']);
             $table->string('title');
             $table->text('description')->nullable();
 
             $table->foreign('meal_id')->references('id')->on('meals')->onDelete('cascade');
-            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
+            $table->foreign('locale')->references('locale')->on('languages')->onDelete('cascade');
         });
     }
 

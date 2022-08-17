@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('ingredient_translations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('ingredient_id');
-            $table->integer('language_id');
+            $table->string('locale')->index();
             $table->string('title');
             $table->timestamps();
 
             $table->foreign('ingredient_id')->references('id')->on('ingredients')->onDelete('cascade');
-            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
+            $table->foreign('locale')->references('locale')->on('languages')->onDelete('cascade');
         });
     }
 

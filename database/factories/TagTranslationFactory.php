@@ -10,7 +10,6 @@ class TagTranslationFactory extends Factory
     {
         return [
             'tag_id' => fake()->numberBetween(1, 10),
-            'language_id' => fake()->numberBetween(1, 3),
             'title' => fake()->unique()->name(),
         ];
     }

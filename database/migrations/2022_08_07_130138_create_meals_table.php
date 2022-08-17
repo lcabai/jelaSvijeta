@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('meals', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('category_id')->nullable();
-            $table->enum('status', ['created', 'modified', 'deleted']); //todo
+            $table->enum('status', ['created', 'modified', 'deleted']);
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');

@@ -29,35 +29,36 @@ class DatabaseSeeder extends Seeder
                 $meal->ingredients()->attach(fake()->unique()->randomElements(range(1, 100), rand(1, 10)));
             }
         );
+        $languages = ['hr', 'en', 'fr'];
 
         for ($id = 1; $id <= 10; $id++) {
-            for ($language_id = 1; $language_id <= 3; $language_id++) {
+            foreach ($languages as $locale) {
                 TagTranslation::factory()->create([
                     'tag_id' => $id,
-                    'language_id' => $language_id,
+                    'locale' => $locale,
                     'title' => fake()->name(),
                 ]);
                 CategoryTranslation::factory()->create([
                     'category_id' => $id,
-                    'language_id' => $language_id,
+                    'locale' => $locale,
                     'title' => fake()->name(),
                 ]);
             }
         };
         for ($id = 1; $id <= 100; $id++) {
-            for ($language_id = 1; $language_id <= 3; $language_id++) {
+            foreach ($languages as $locale) {
                 IngredientTranslation::factory()->create([
                     'ingredient_id' => $id,
-                    'language_id' => $language_id,
+                    'locale' => $locale,
                     'title' => fake()->name(),
                 ]);
             }
         };
         for ($id = 1; $id <= 30; $id++) {
-            for ($language_id = 1; $language_id <= 3; $language_id++) {
+            foreach ($languages as $locale) {
                 MealTranslation::factory()->create([
                     'meal_id' => $id,
-                    'language_id' => $language_id,
+                    'locale' => $locale,
                     'title' => fake()->name(),
                     'description' => fake()->text(),
                 ]);

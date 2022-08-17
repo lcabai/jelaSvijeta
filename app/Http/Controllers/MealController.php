@@ -7,9 +7,6 @@ use App\Models\MealTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-use Carbon\Carbon;
-
-
 use Illuminate\Support\Facades\Validator;
 
 class MealController extends Controller
@@ -41,19 +38,20 @@ class MealController extends Controller
             'en' => 2,
             'fr' => 3,
         };
+        app()->setLocale($params['lang']);
 
         $query = Meal::select();
 
         if (isset($params['category'])) {
             if ($params['category'] == 'NULL') {
                 $query = $query
-                    ->whereNull('category_id');
+                    ->whereNull('meals.category_id');
             } elseif ($params['category'] == '!NULL') {
                 $query = $query
-                    ->whereNotNull('category_id');
+                    ->whereNotNull('meals.category_id');
             } else {
                 $query = $query
-                    ->where('category_id', $params['category']);
+                    ->where('meals.category_id', $params['category']);
             }
         }
 
@@ -63,28 +61,35 @@ class MealController extends Controller
             foreach ($tags as $tag) {
                 $meal_ids = DB::table('meal_tag')->where('tag_id', $tag)->pluck('meal_id');
                 $query = $query
-                    ->whereIn('id', $meal_ids);
+                    ->whereIn('meals.id', $meal_ids);
             }
         }
 
         if (isset($params['diff_time'])) {
             $date = date('Y-m-d H:i:s', $params['diff_time']);
             $query = $query
-                ->where('created_at', '>', $date);
+                ->where('meals.created_at', '>', $date);
         }
-
 
         if (isset($params['with'])) {
+
+            $params = explode(',', $params['with']);
+
+            foreach ($params as $p) {
+                $query = $query
+                    ->with($p);
+            }
+        } else {
+            $meal_ids = $query->pluck('meals.id');
+            $query = MealTranslation::select()
+                ->where('language_id', $language_id)
+                ->leftJoin('meals', 'meal_id', 'meals.id')
+                ->whereIn('meals.id', $meal_ids)
+                ->select('meal_id as id', 'title', 'description', 'status');
         }
 
-        // $query = MealTranslation::select()
-        //     ->where('language_id', $language_id)
-        //     ->leftJoin('meals', 'meal_id', 'meals.id');
-        $query = $query->get();
-        // ->select('meal_id as id', 'title', 'description', 'status')
-
-        // $per_page = isset($params['per_page']) ? $params['per_page'] : 10;
-        return $query;
-        // ->paginate($per_page);
+        $per_page = isset($params['per_page']) ? $params['per_page'] : 10;
+        $response = $query->paginate($per_page);
+        return response()->json($response);
     }
 }
