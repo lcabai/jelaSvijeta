@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meal;
-use App\Models\MealTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Validator;
 
 class MealController extends Controller
@@ -33,12 +32,7 @@ class MealController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        $language_id = match ($params['lang']) {
-            'hr' => 1,
-            'en' => 2,
-            'fr' => 3,
-        };
-        app()->setLocale($params['lang']);
+        App::setLocale($params['lang']);
 
         $query = Meal::select();
 
@@ -79,13 +73,6 @@ class MealController extends Controller
                 $query = $query
                     ->with($p);
             }
-        } else {
-            $meal_ids = $query->pluck('meals.id');
-            $query = MealTranslation::select()
-                ->where('language_id', $language_id)
-                ->leftJoin('meals', 'meal_id', 'meals.id')
-                ->whereIn('meals.id', $meal_ids)
-                ->select('meal_id as id', 'title', 'description', 'status');
         }
 
         $per_page = isset($params['per_page']) ? $params['per_page'] : 10;
