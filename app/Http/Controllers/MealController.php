@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Meal;
 use App\Models\MealTranslation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use Carbon\Carbon;
 
@@ -17,7 +18,7 @@ class MealController extends Controller
     {
         $params = $request->all();
 
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($params, [
             'per_page'    => ['nullable', 'integer', 'min:1'],
             'page'        => ['nullable', 'integer', 'min:1'],
             'category'    => ['nullable', 'string'],
@@ -41,22 +42,48 @@ class MealController extends Controller
             'fr' => 3,
         };
 
-        $query = MealTranslation::select();
-
-
-        if (isset($params['with'])) {
-        }
+        $query = DB::table('meal_translations')
+            ->where('language_id', $language_id)
+            ->leftJoin('meals', 'meal_id', 'meals.id')
+            ->get();
 
         if (isset($params['category'])) {
+            if ($params['category'] == 'NULL') {
+                $query = $query
+                    ->whereNull('category_id');
+            } elseif ($params['category'] == '!NULL') {
+                $query = $query
+                    ->whereNotNull('category_id');
+            } else {
+                $query = $query
+                    ->where('category_id', $params['category']);
+            }
+        }
+
+        if (isset($params['tag'])) {
+            $tags = explode(',', $params['tag']);
+            $tags_table = DB::table('tag_translations')
+                ->where('language_id', $language_id)
+                ->leftJoin('tags', 'tag_id', 'tags.id')
+                ->leftJoin('meal_tag', 'tag_id', 'meal_tag.tag_id')
+                ->get();
+
+            $query = $query
+                ->leftJoin($tags_table, 'id', 'meal_id')
+                ->whereIn('tag_id', $tags);
         }
 
         if (isset($params['diff_time'])) {
         }
 
-        if (isset($params['tag'])) {
+
+        if (isset($params['with'])) {
         }
 
-        $per_page = isset($params['per_page']) ? $params['per_page'] : 10;
-        return $query->paginate($per_page);
+        // ->select('meal_id as id', 'title', 'description', 'status')
+
+        // $per_page = isset($params['per_page']) ? $params['per_page'] : 10;
+        return $query;
+        // ->paginate($per_page);
     }
 }
