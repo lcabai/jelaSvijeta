@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         Ingredient::factory(100)->create();
         Meal::factory(30)->create()->each(
             function ($meal) {
-                $meal->tags()->attach(fake()->unique()->randomElements(range(1, 10), rand(1, 10)));
+                $meal->tags()->attach(fake()->unique()->randomElements(range(1, 10), rand(1, 5)));
                 $meal->ingredients()->attach(fake()->unique()->randomElements(range(1, 100), rand(1, 10)));
             }
         );
