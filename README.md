@@ -1,4 +1,12 @@
-## Zadatak i ciljevi
+## my first project in Php and Laravel
+
+# setting up
+using postgresql create a db with name 'jela_svijeta'
+(can copy my configuration from .env.example into .env)
+then run the command **php artisan migrate:fresh --seed**
+now that your db is ready, you are ready to get in the api
+run **php artisan serve** and go to the link
+
 Potrebno je kreirati aplikaciju Jela svijeta koristeći Laravel framework (Verzija
 5.0+). Ova aplikacija se sastoji od baze jela, sastojaka, kategorija i tagova.
 S obzirom da je aplikacija višejezična, jela, sastojci, kategorije i tagovi imaju
